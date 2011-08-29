@@ -1,4 +1,4 @@
-package RegexFixture;
+package Fixtures;
 
 import fit.ColumnFixture;
 import java.io.*;
@@ -11,7 +11,7 @@ import fit.Fixture;
  * @version 1
  */
 
-public class RegexFixture extends ColumnFixture {
+public class Regex extends ColumnFixture {
     public String value;
     public String pattern;
     public String debug = "";
@@ -22,13 +22,7 @@ public class RegexFixture extends ColumnFixture {
 	debug = "";
 	workspace=null;
 
-	// Find and hydrate symbols
-	while (value.matches("^.*%\\S+%.*$")) {
-		value = parseSymbols(value);
-	}
-	while (pattern.matches("^.*%\\S+%.*$")) {
-		pattern = parseSymbols(pattern);
-	}
+        value = Common.Symbol.parseSymbols(value);
 
 	// If VALUE is a file path, process the file. Otherwise, process the string.
 	if (value.toLowerCase().startsWith("!file:")){
@@ -60,27 +54,7 @@ public class RegexFixture extends ColumnFixture {
 	//		return Fixture.getSymbol(s);
 	//	}
 
-    public String parseSymbols(String input){
-	String result = "";
-	String symbol = "";
-	Object symValue = "";
 
-	debug += "parseSymbols split 0: " + input.split("%",3)[0] + "<br><br>";
-	debug += "parseSymbols split 1: " + input.split("%",3)[1] + "<br><br>";
-	debug += "parseSymbols split 2: " + input.split("%",3)[2] + "<br><br>";
-
-	symbol = input.split("%",3)[1];
-
-	symValue = Fixture.getSymbol(symbol);
-	debug += "symValue: " + symValue + "<br><br>";
-
-        if (symValue.toString().isEmpty()) {
-            result = input;
-        } else {
-	result = input.split("%",3)[0] + symValue + input.split("%",3)[2];
-        }
-	return result;
-    }
 
     public String matchPatternFromFile(String regex, String strFile) {
 	File aFile = new File(strFile);
